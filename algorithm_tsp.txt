@@ -1,0 +1,37 @@
+Algorithm TSP_BruteForce(Graph, N, start)
+Input: 
+    Graph – a 2D cost matrix of size N×N
+    N – number of cities
+    start – the starting city index
+Output: 
+    Minimum cost to complete a tour visiting all cities exactly once and return to start
+
+Begin
+    Create an array city[] to store all cities except the starting city
+    For i ← 0 to N-1 do
+        If i ≠ start then
+            Add i to city[]
+        EndIf
+    EndFor
+
+    min_cost ← ∞
+
+    Repeat
+        current_cost ← 0
+        k ← start
+
+        For i ← 0 to N-2 do
+            current_cost ← current_cost + Graph[k][city[i]]
+            k ← city[i]
+        EndFor
+
+        current_cost ← current_cost + Graph[k][start]   // Return to start
+
+        If current_cost < min_cost then
+            min_cost ← current_cost
+        EndIf
+
+    Until there are no more permutations of city[]
+
+    Return min_cost
+End
