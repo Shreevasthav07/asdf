@@ -3,6 +3,8 @@
 
 #define N 4  // Number of cities
 
+int next_permutation(int *p, int n);  // Function prototype
+
 int tsp(int graph[N][N], int start) {
     int visited[N] = {0};
     int path[N + 1];
@@ -35,7 +37,7 @@ int tsp(int graph[N][N], int start) {
     return min_path_cost;
 }
 
-// Helper function to generate next permutation
+// Helper function to generate next permutation (already defined)
 int next_permutation(int *p, int n) {
     int i = n - 2;
     while (i >= 0 && p[i] > p[i + 1])
