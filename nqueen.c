@@ -1,7 +1,12 @@
 #include <stdio.h>
 #define N 4  // You can change this to any N (e.g., 8 for 8-queens)
 
+int solutionCount = 0;  // Global counter for solutions
+
 void printSolution(int board[N][N]) {
+    solutionCount++;
+    printf("Solution %d:\n", solutionCount);  // Print before board
+
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++)
             printf("%d ", board[i][j]);
