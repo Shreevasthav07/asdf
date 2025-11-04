@@ -1,51 +1,67 @@
 #include <stdio.h>
-#define INF 99999
-#define V 4  // number of vertices
+#define N 4  // You can change this to any N (e.g., 8 for 8-queens)
 
-void printSolution(int dist[V][V]) {
-    printf("The following matrix shows the shortest distances between every pair of vertices:\n");
-    for (int i = 0; i < V; i++) {
-        for (int j = 0; j < V; j++) {
-            if (dist[i][j] == INF)
-                printf("%7s", "INF");
-            else
-                printf("%7d", dist[i][j]);
-        }
+int solutionCount = 0;  // Global counter for solutions
+
+void printSolution(int board[N][N]) {
+    solutionCount++;
+    printf("Solution %d:\n", solutionCount);  // Print before board
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++)
+            printf("%d ", board[i][j]);
         printf("\n");
     }
+    printf("\n");
 }
 
-void floydWarshall(int graph[V][V]) {
-    int dist[V][V];
+// Check if a queen can be placed on board[row][col]
+int isSafe(int board[N][N], int row, int col) {
+    int i, j;
 
-    // Initialize the solution matrix same as input graph
-    for (int i = 0; i < V; i++)
-        for (int j = 0; j < V; j++)
-            dist[i][j] = graph[i][j];
+    // Check this column on upper side
+    for (i = 0; i < row; i++)
+        if (board[i][col])
+            return 0;
 
-    // Floyd-Warshall algorithm
-    for (int k = 0; k < V; k++) {
-        for (int i = 0; i < V; i++) {
-            for (int j = 0; j < V; j++) {
-                if (dist[i][k] + dist[k][j] < dist[i][j])
-                    dist[i][j] = dist[i][k] + dist[k][j];
-            }
-        }
+    // Check upper-left diagonal
+    for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j])
+            return 0;
+
+    // Check upper-right diagonal
+    for (i = row, j = col; i >= 0 && j < N; i--, j++)
+        if (board[i][j])
+            return 0;
+
+    return 1; // Safe position
+}
+
+int solveNQUtil(int board[N][N], int row) {
+    if (row == N) {
+        printSolution(board);
+        return 1;
     }
 
-    printSolution(dist);
+    int res = 0; // To check if at least one solution exists
+    for (int col = 0; col < N; col++) {
+        if (isSafe(board, row, col)) {
+            board[row][col] = 1;           // Place queen
+            res = solveNQUtil(board, row + 1) || res;  // Recurse
+            board[row][col] = 0;           // Backtrack
+        }
+    }
+    return res;
+}
+
+void solveNQ() {
+    int board[N][N] = {0};
+
+    if (solveNQUtil(board, 0) == 0)
+        printf("No solution exists\n");
 }
 
 int main() {
-    /* Example graph represented as adjacency matrix
-       INF means no direct path between nodes */
-    int graph[V][V] = {
-        {0,   5,  INF, 10},
-        {INF, 0,   3,  INF},
-        {INF, INF, 0,   1},
-        {INF, INF, INF, 0}
-    };
-
-    floydWarshall(graph);
+    solveNQ();
     return 0;
 }
