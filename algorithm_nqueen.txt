@@ -1,0 +1,21 @@
+solveNQueens(board, row, N):
+    if row == N:
+        print board configuration
+        return true
+
+    for col = 0 to N-1:
+        if isSafe(board, row, col, N):
+            place queen at board[row][col]
+            solveNQueens(board, row + 1, N)
+            remove queen from board[row][col]  // backtrack
+
+isSafe(board, row, col, N):
+    check column for any queen
+    check upper-left diagonal
+    check upper-right diagonal
+    if none have queens, return true
+    else return false
+
+main:
+    initialize NxN board with all zeros
+    call solveNQueens(board, 0, N)
